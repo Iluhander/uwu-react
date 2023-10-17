@@ -1,7 +1,7 @@
-import useUpdateByCoolDown from '../hooks/useUpdateByCoolDown';
-import areEqualShallow from '../objs/areEqualShallow';
-import useReq from '../hooks/useReq/useReq';
-import extractFormData from './extractFormData';
+import useUpdateByCoolDown from '../hooks/useUpdateByCoolDown.js';
+import areEqualShallow from '../objs/areEqualShallow.js';
+import useReq from '../hooks/useReq/useReq.js';
+import extractFormData from './extractFormData.js';
 
 export default function useSendFormByCD(fetchFunction, formRef, config = {}) {
   const beforeSending = config.beforeSending || ((newData) => newData);

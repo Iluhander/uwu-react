@@ -1,4 +1,4 @@
-import extractFormData from './extractFormData';
-import useSendFormByCD from './useSendFormByCD';
+import extractFormData from './extractFormData.js';
+import useSendFormByCD from './useSendFormByCD.js';
 
 export default { extractFormData, useSendFormByCD };
