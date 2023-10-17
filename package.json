@@ -1,6 +1,6 @@
 {
   "name": "@iluhander/uwu-react",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Simple and lightweight react lib",
   "main": "index.js",
   "type": "module",
