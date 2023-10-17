@@ -1,0 +1,29 @@
+{
+  "name": "uwu-react",
+  "version": "1.0.0",
+  "description": "Simple and lightweight react lib",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iluhander/uwu-react.git"
+  },
+  "keywords": [
+    "react",
+    "http",
+    "hooks",
+    "uwu"
+  ],
+  "author": "iluhander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Iluhander/uwu-react/issues"
+  },
+  "homepage": "https://github.com/Iluhander/uwu-react#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
