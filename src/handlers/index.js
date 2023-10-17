@@ -1,10 +1,10 @@
-import commonKeyDownHandler from "./commonKeyDownHandler";
-import extendedKeyDownHandler from "./extendedKeyDownHandler";
-import getSelectedESubstr from "./utilities/getSelectedESubstr";
-import insertEStr from "./utilities/insertEStr";
-import strHasBannedSymb from "./utilities/strHasBannedSymb";
+import commonKeyDownHandler from "./commonKeyDownHandler.js";
+import extendedKeyDownHandler from "./extendedKeyDownHandler.js";
+import getSelectedESubstr from "./utilities/getSelectedESubstr.js";
+import insertEStr from "./utilities/insertEStr.js";
+import strHasBannedSymb from "./utilities/strHasBannedSymb.js";
 
-export default {
+export {
   commonKeyDownHandler,
   extendedKeyDownHandler,
   getSelectedESubstr,

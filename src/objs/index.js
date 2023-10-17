@@ -1,4 +1,4 @@
-import areEqualShallow from "./areEqualShallow.js";
 import isObj from "./isObj.js";
+import areEqualShallow from "./areEqualShallow.js";
 
-export default { areEqualShallow, isObj };
+export { isObj, areEqualShallow };

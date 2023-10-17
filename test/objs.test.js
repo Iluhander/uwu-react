@@ -1,4 +1,4 @@
-import areEqualShallow from '../src/objs/areEqualShallow.js';
+import { areEqualShallow } from '../index.js';
 
 test('Testing shallow objs comparison', () => {
   expect(areEqualShallow({

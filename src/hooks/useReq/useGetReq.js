@@ -1,7 +1,7 @@
-import useReq from './useReq';
+import useReq from './useReq.js';
 
 // Guard Error checking.
-import checkGuardErr from '../../enums/checks/checkGuardErr';
+import checkGuardErr from '../../enums/checks/checkGuardErr.js';
 
 /**
  * Hook for making GET request.

@@ -1,7 +1,7 @@
-import commonKeyDownHandler from './commonKeyDownHandler';
-import strHasBannedSymb from './utilities/strHasBannedSymb';
-import getSelectedESubstr from './utilities/getSelectedESubstr';
-import insertEStr from './utilities/insertEStr';
+import commonKeyDownHandler from './commonKeyDownHandler.js';
+import strHasBannedSymb from './utilities/strHasBannedSymb.js';
+import getSelectedESubstr from './utilities/getSelectedESubstr.js';
+import insertEStr from './utilities/insertEStr.js';
 
 export default function extendedKeyDownHandler(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'c') {

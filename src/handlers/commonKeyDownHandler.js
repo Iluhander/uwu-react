@@ -1,4 +1,4 @@
-import insertEStr from './utilities/insertEStr';
+import insertEStr from './utilities/insertEStr.js';
 
 const allowedKeys =
   '\n qwertyuiopQWERTYUIOPASDFGHJKLZXCVBNM[]asdfghjkl:;zxcvbnm,.`1234567890-=!$^&*?(){}#|/_+йцукеёнгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ';

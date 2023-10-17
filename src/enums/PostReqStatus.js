@@ -1,4 +1,4 @@
-import ReqStatus from './ReqStatus';
+import ReqStatus from './ReqStatus.js';
 
 /**
  * Enum of POST-request state.

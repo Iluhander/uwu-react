@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-import ReqStatus from '../../enums/ReqStatus';
+import ReqStatus from '../../enums/ReqStatus.js';
 
 /**
  * Hook for making a request.

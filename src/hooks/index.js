@@ -1,5 +1,5 @@
-import useUpdateByCoolDown from "./useUpdateByCoolDown";
-import useReq from "./useReq/useReq";
-import useGetReq from "./useReq/useGetReq";
+import useUpdateByCoolDown from "./useUpdateByCoolDown.js";
+import useReq from "./useReq/useReq.js";
+import useGetReq from "./useReq/useGetReq.js";
 
-export default { useUpdateByCoolDown, useReq, useGetReq };
+export { useUpdateByCoolDown, useReq, useGetReq };
