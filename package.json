@@ -1,6 +1,6 @@
 {
   "name": "@iluhander/uwu-react",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Simple and lightweight react lib",
   "types": "./lib/esm/types/index.d.ts",
   "main": "./lib/esm/index.js",
