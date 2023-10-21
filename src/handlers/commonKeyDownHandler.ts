@@ -3,7 +3,7 @@ import insertEStr from './utilities/insertEStr.js';
 const allowedKeys =
   '\n qwertyuiopQWERTYUIOPASDFGHJKLZXCVBNM[]asdfghjkl:;zxcvbnm,.`1234567890-=!$^&*?(){}#|/_+йцукеёнгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ';
 
-export default function commonKeyDownHandler(e) {
+export default function commonKeyDownHandler(e: any) {
   const { selectionStart, selectionEnd } = e.target;
   const str = e.target.value;
 

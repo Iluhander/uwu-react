@@ -1,25 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, SetStateAction } from 'react';
 
-import ReqStatus from '../../enums/ReqStatus.js';
+import { ReqStatus } from '../../enums/index.js';
+
+import { IReqConfig, TFetchFunction } from '../types/types.js';
 
 /**
  * Hook for making a request.
  * Also can change the stored data between requests
  *
- * @param {Function} fetchFunction - function making the request.
- * @param {Object} config - request configuration.
+ * @param {TFetchFunction} fetchFunction - function making the request.
+ * @param {IReqConfig} config - request configuration.
  *
  * - If the config has field "StatusObj", then "StatusObj" is used instead of ReqStatus
  * for request state enum.
  * - If the config has field initialData, then resData = initialData
  * (before next data fetching the request).
  */
-export default function useReq(fetchFunction, config = {}) {
+export default function useReq<TReq, TData>(fetchFunction: TFetchFunction, config: IReqConfig<TReq> = {}) {
   const { getSuccessStatus, getFailedStatus } = config;
   const StatusObj = config.StatusObj || ReqStatus;
   const initialData = config.initialData || null;
 
-  const reqData = useRef({});
+  const reqData = useRef<TData | {}>({});
 
   const [req, setReq] = useState({
     id: 0,
@@ -59,10 +61,18 @@ export default function useReq(fetchFunction, config = {}) {
       .catch((err) =>
         setReq((prevData) => ({
           ...prevData,
-          status: getFailedStatus ? getFailedStatus(err.response.status) : StatusObj.ERROR
+          status: getFailedStatus ? getFailedStatus(err.response?.status || 500) : StatusObj.ERROR
         }))
       );
   }, [req.id]);
+
+  const setReqData = (input: SetStateAction<TData>) => {
+    if (typeof input === 'function') {
+      reqData.current = (input as (prevData: TData | {}) => TData)(reqData.current);
+    } else {
+      reqData.current = input;
+    }
+  }
 
   return {
     data: resData,
@@ -77,19 +87,13 @@ export default function useReq(fetchFunction, config = {}) {
     /**
      * Function for changing the request body without executing it.
      */
-    setReqData: (input) => {
-      if (typeof input === 'function') {
-        reqData.current = input(reqData.current);
-      } else {
-        reqData.current = input;
-      }
-    },
+    setReqData,
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
      * @param {*} data - request body.
      */
-    exec: (data) => {
+    exec: (data: TData) => {
       reqData.current = data;
       execReq();
     }

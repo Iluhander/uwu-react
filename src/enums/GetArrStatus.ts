@@ -1,4 +1,4 @@
-import GetReqStatus from './GetReqStatus.js';
+import GetReqStatus from "./GetReqStatus.js";
 
 /**
  * Enum of GET-Array-request state.

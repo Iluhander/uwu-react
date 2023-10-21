@@ -1,4 +1,4 @@
-import { areEqualShallow } from '../index.js';
+import { areEqualShallow } from '../lib/esm/index.mjs';
 
 test('Testing shallow objs comparison', () => {
   expect(areEqualShallow({

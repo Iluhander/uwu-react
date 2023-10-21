@@ -1,4 +1,4 @@
-import ReqStatus from './ReqStatus.js';
+import ReqStatus from "./ReqStatus.js";
 
 /**
  * Enum of GET-request state.
@@ -6,5 +6,5 @@ import ReqStatus from './ReqStatus.js';
 export default {
   ...ReqStatus,
   GUARD_NOT_AUTHENTICATED: 451,
-  GUARD_NOT_AUTHORIZED: 453
+  GUARDNOT_AUTHORIZED: 453
 };

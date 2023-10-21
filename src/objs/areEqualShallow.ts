@@ -1,6 +1,6 @@
 import isObj from './isObj.js';
 
-export default function areEqualShallow(obj0, obj1) {
+export default function areEqualShallow(obj0: any, obj1: any) {
   if (!isObj(obj0) || !isObj(obj1)) {
     return false;
   }

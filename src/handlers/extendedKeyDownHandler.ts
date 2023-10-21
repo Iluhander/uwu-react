@@ -3,7 +3,7 @@ import strHasBannedSymb from './utilities/strHasBannedSymb.js';
 import getSelectedESubstr from './utilities/getSelectedESubstr.js';
 import insertEStr from './utilities/insertEStr.js';
 
-export default function extendedKeyDownHandler(e) {
+export default function extendedKeyDownHandler(e: any) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
     const type = 'text/plain';
     const blob = new Blob([getSelectedESubstr(e)], { type });

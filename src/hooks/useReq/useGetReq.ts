@@ -2,19 +2,20 @@ import useReq from './useReq.js';
 
 // Guard Error checking.
 import checkGuardErr from '../../enums/checks/checkGuardErr.js';
+import { IGetReqConfig, TFetchFunction, TSyncGuardResult } from '../types/types.js';
 
 /**
  * Hook for making GET request.
  *
- * @param {Function} fetchFunction - function, calling the request.
- * @param {Object} config - request config. If config has method "syncGuard",
+ * @param {TFetchFunction} fetchFunction - function, calling the request.
+ * @param {IGetReqConfig} config - request config. If config has method "syncGuard",
  * then "syncGuard" method is called before making a request.
  * If "syncGuard" returns not nullable value, then the request is cancelled with
  * @see {@link checkGuardErr} error.
  */
-export default function useGetReq(fetchFunction, config = {}) {
+export default function useGetReq<T>(fetchFunction: TFetchFunction, config: IGetReqConfig<T> = {}) {
   let syncGuardPassed = true;
-  let syncGuardResult;
+  let syncGuardResult: TSyncGuardResult;
 
   if (config.syncGuard) {
     syncGuardResult = config.syncGuard();

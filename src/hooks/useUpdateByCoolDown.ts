@@ -1,7 +1,12 @@
-import { useRef } from 'react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 
-export default function useUpdateByCoolDown(setData, getDataIfChanged, onUpdate, coolDown = 1000) {
-  const interval = useRef(null);
+export default function useUpdateByCoolDown<T>(
+  setData: Dispatch<SetStateAction<T>>,
+  getDataIfChanged: (prevData: T) => T | undefined,
+  onUpdate: (data: T) => void,
+  coolDown = 1000
+) {
+  const interval = useRef<null | NodeJS.Timeout>(null);
 
   if (!interval.current) {
     interval.current = setInterval(() => {
