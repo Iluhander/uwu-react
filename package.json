@@ -3,23 +3,16 @@
   "version": "1.6.0",
   "description": "Simple and lightweight react lib",
   "types": "./lib/esm/types/index.d.ts",
-  "main": "./lib/esm/index.js",
+  "main": "./lib/esm/index.mjs",
   "type": "module",
   "exports": {
-    "typesVersions": {
-      "*": {
-        "enums": "./lib/esm/types/src/enums/index.d.ts",
-        "forms": "./lib/esm/types/src/forms/index.d.ts",
-        "handlers": "./lib/esm/types/src/handlers/index.d.ts",
-        "hooks": "./lib/esm/types/src/hooks/index.d.ts",
-        "objs": "./lib/esm/types/src/objs/index.d.ts"
+    ".": {
+      "import": {
+        "types": "./lib/esm/types/index.d.ts",
+        "default": "./lib/esm/index.mjs"
       }
     },
-    "./enums": "./lib/esm/src/enums/index.js",
-    "./forms": "./lib/esm/src/forms/index.js",
-    "./handlers": "./lib/esm/src/handlers/index.js",
-    "./hooks": "./lib/esm/src/hooks/index.js",
-    "./objs": "./lib/esm/src/objs/index.js"
+    "./package.json": "./package.json"
   },
   "files": [
     "lib/**/*"
