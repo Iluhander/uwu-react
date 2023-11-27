@@ -16,7 +16,7 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
  * - If the config has field initialData, then resData = initialData
  * (before next data fetching the request).
  */
-export default function useReq<TReq, TData>(fetchFunction: TFetchFunction, config: IReqConfig<TReq> = {}) {
+export default function useReq<TData>(fetchFunction: TFetchFunction, config: IReqConfig<TData> = {}) {
   const { getSuccessStatus, getFailedStatus } = config;
   const StatusObj = config.StatusObj || ReqStatus;
   const initialData = config.initialData || null;

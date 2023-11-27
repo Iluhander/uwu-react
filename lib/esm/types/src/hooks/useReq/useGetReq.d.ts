@@ -13,7 +13,7 @@ export default function useGetReq<T>(fetchFunction: TFetchFunction, config?: IGe
     status: TSyncGuardResult;
     data: NonNullable<T> | null;
     setData: import("react").Dispatch<import("react").SetStateAction<NonNullable<T> | null>>;
-    setReqData: (input: unknown) => void;
-    exec: (data: unknown) => void;
+    setReqData: (input: import("react").SetStateAction<T>) => void;
+    exec: (data: T) => void;
 };
 //# sourceMappingURL=useGetReq.d.ts.map

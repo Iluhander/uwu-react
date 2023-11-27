@@ -6,6 +6,9 @@ export interface IReqConfig<T> {
     StatusObj?: IStatusObj;
     initialData?: T | null;
     notInstantReq?: boolean;
+    ResSchema?: {
+        new (): any;
+    };
 }
 export type TSyncGuardResult = number | undefined;
 export interface IGetReqConfig<T> extends IReqConfig<T> {

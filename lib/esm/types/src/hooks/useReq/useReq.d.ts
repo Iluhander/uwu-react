@@ -12,8 +12,8 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
  * - If the config has field initialData, then resData = initialData
  * (before next data fetching the request).
  */
-export default function useReq<TReq, TData>(fetchFunction: TFetchFunction, config?: IReqConfig<TReq>): {
-    data: NonNullable<TReq> | null;
+export default function useReq<TData>(fetchFunction: TFetchFunction, config?: IReqConfig<TData>): {
+    data: NonNullable<TData> | null;
     /**
      * Request status.
      */
@@ -21,7 +21,7 @@ export default function useReq<TReq, TData>(fetchFunction: TFetchFunction, confi
     /**
      * Function for changing the data stored.
      */
-    setData: import("react").Dispatch<SetStateAction<NonNullable<TReq> | null>>;
+    setData: import("react").Dispatch<SetStateAction<NonNullable<TData> | null>>;
     /**
      * Function for changing the request body without executing it.
      */

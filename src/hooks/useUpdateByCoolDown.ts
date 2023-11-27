@@ -6,7 +6,7 @@ export default function useUpdateByCoolDown<T>(
   onUpdate: (data: T) => void,
   coolDown = 1000
 ) {
-  const interval = useRef<null | NodeJS.Timeout>(null);
+  const interval = useRef<any>(null);
 
   if (!interval.current) {
     interval.current = setInterval(() => {

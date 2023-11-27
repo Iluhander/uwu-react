@@ -3,19 +3,47 @@ import areEqualShallow from '../objs/areEqualShallow.js';
 import useReq from '../hooks/useReq/useReq.js';
 import extractFormData from './extractFormData.js';
 import { TFetchFunction } from '../hooks/types/types.js';
-import { RefObject } from 'react';
+import { RefObject, useEffect } from 'react';
 import { ISendFormByCDConfig } from './types/types.js';
+import injectFormData from './injectFormData.js';
 
+/**
+ * Makes requests with form data by cool down.
+ * @param fetchFunction - called by cool down.
+ * @param formRef - reference to form.
+ * @param config - config.
+ */
 export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRef: RefObject<HTMLFormElement>, config: ISendFormByCDConfig<T> = {}) {
   const beforeSending = config.beforeSending || ((newData: any) => newData);
   const compare =
     config.compare || ((prevData, newData) => newData && !areEqualShallow(prevData, newData));
+  const coolDown = config.coolDown || 5000;
+  const name = config.name;
 
-  const { status, exec, setReqData } = useReq<T, T>((data: T) => fetchFunction(data), {
+  // Retrieving data from local storage.
+  useEffect(() => {
+    if (!name || !formRef.current) {
+      return;
+    }
+
+    const recovered = localStorage.getItem(name);
+    if (recovered && formRef.current) {
+      injectFormData(formRef.current, JSON.parse(recovered));
+    }
+
+    // Saving data to local storage.
+    setInterval(() => {
+      if (formRef.current) {
+        localStorage.setItem(name, JSON.stringify(extractFormData<T>(formRef.current) || {}));
+      }
+    }, config.localSavingCoolDown || 2000);
+  }, []);
+
+  const { status, exec, setReqData } = useReq<T>((data: T) => fetchFunction(data), {
     notInstantReq: true,
     initialData: extractFormData<T>(formRef?.current)
   });
-
+  
   useUpdateByCoolDown(
     setReqData,
     (prevData: T) => {
@@ -26,7 +54,7 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
       }
     },
     exec,
-    2500
+    coolDown
   );
 
   return status;

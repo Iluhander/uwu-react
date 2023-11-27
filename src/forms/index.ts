@@ -1,4 +1,5 @@
 import extractFormData from './extractFormData.js';
+import injectFormData from './injectFormData.js';
 import useSendFormByCD from './useSendFormByCD.js';
 
-export { extractFormData, useSendFormByCD };
+export { extractFormData, injectFormData, useSendFormByCD };
