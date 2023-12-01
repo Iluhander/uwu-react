@@ -19,10 +19,10 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
 export default function useReq<TData>(fetchFunction: TFetchFunction, config: IReqConfig<TData> = {}) {
   const { getSuccessStatus, getFailedStatus } = config;
   const StatusObj = config.StatusObj || ReqStatus;
-  const initialData = config.initialData || null;
-
+  const initialData = config.initialData !== undefined ? config.initialData : null;
+  
   const reqData = useRef<TData | {}>({});
-
+  
   const [req, setReq] = useState({
     id: 0,
     status: config.notInstantReq ? StatusObj.INITIALIZED : StatusObj.LOADING
@@ -51,7 +51,13 @@ export default function useReq<TData>(fetchFunction: TFetchFunction, config: IRe
 
     fetchFunction(reqData.current)
       .then(({ data }) => {
-        setResData(data);
+        if (!config.reducer) {
+          setResData(data);
+        } else {
+          // config.reducer !== undefined here
+          // @ts-ignore
+          setResData((prevData) => config.reducer(prevData, data))
+        }
 
         setReq((prevData) => ({
           ...prevData,

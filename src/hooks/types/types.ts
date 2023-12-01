@@ -1,8 +1,13 @@
 import { IStatusObj } from '../../enums/types/types.js';
 
-export type TFetchFunction = (data: any) => Promise<any>;
+export interface IResponse {
+  data: any;
+}
+
+export type TFetchFunction = (data: any) => Promise<IResponse>;
 
 export interface IReqConfig<T> {
+  reducer?: (prevData: T | null, newData: T) => NonNullable<T> | null;
   getSuccessStatus?: (data: T) => number;
   getFailedStatus?: (errCode: number) => number;
   StatusObj?: IStatusObj;
