@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, SetStateAction } from 'react';
 
 import { ReqStatus } from '../../enums/index.js';
 
-import { IReqConfig, TFetchFunction } from '../types/types.js';
+import { IReqConfig, IResponse, TFetchFunction } from '../types/types.js';
 
 /**
  * Hook for making a request.
@@ -19,22 +19,23 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
 export default function useReq<TData>(fetchFunction: TFetchFunction, config: IReqConfig<TData> = {}) {
   const { getSuccessStatus, getFailedStatus } = config;
   const StatusObj = config.StatusObj || ReqStatus;
-  const initialData = config.initialData !== undefined ? config.initialData : null;
-  
+
   const reqData = useRef<TData | {}>({});
   
   const [req, setReq] = useState({
     id: 0,
+    attemptsLeft: 0,
     status: config.notInstantReq ? StatusObj.INITIALIZED : StatusObj.LOADING
   });
 
   const execReq = () =>
     setReq((prevData) => ({
       status: StatusObj.LOADING,
+      attemptsLeft: config.attempts || 1,
       id: prevData.id + 1
     }));
 
-  const [resData, setResData] = useState(initialData);
+  const [resData, setResData] = useState(config.initialData !== undefined ? config.initialData : null);
 
   // TODO?: remove this useEffect.
   useEffect(() => {
@@ -49,7 +50,17 @@ export default function useReq<TData>(fetchFunction: TFetchFunction, config: IRe
       return;
     }
 
-    fetchFunction(reqData.current)
+    if (!req.attemptsLeft) {
+      return;
+    }
+
+    Promise.race([
+      fetchFunction(reqData.current),
+      new Promise<IResponse>((_, reject) =>
+        setTimeout(() => reject({ status: StatusObj.TIMEOUT }),
+        config.timeout || 30000)
+      )
+    ])
       .then(({ data }) => {
         if (!config.reducer) {
           setResData(data);
@@ -64,12 +75,31 @@ export default function useReq<TData>(fetchFunction: TFetchFunction, config: IRe
           status: getSuccessStatus ? getSuccessStatus(data) : StatusObj.LOADED
         }));
       })
-      .catch((err) =>
-        setReq((prevData) => ({
-          ...prevData,
-          status: getFailedStatus ? getFailedStatus(err.response?.status || 500) : StatusObj.ERROR
-        }))
-      );
+      .catch((err) => {
+        setReq((prevData) => {
+          if (prevData.attemptsLeft > 1) {
+            return {
+              ...prevData,
+              attemptsLeft: prevData.attemptsLeft - 1,
+              id: prevData.id + 1
+            };
+          }
+          
+          if (err.status === StatusObj.TIMEOUT) {
+            return {
+              ...prevData,
+              attemptsLeft: 0,
+              status: StatusObj.TIMEOUT
+            }
+          }
+
+          return {
+            ...prevData,
+            attemptsLeft: 0,
+            status: getFailedStatus ? getFailedStatus(err.response?.status || 500) : StatusObj.ERROR
+          };
+        });
+      });
   }, [req.id]);
 
   const setReqData = (input: SetStateAction<TData>) => {
@@ -81,6 +111,9 @@ export default function useReq<TData>(fetchFunction: TFetchFunction, config: IRe
   }
 
   return {
+    /**
+     * Initially equal to config.initialData.
+     */
     data: resData,
     /**
      * Request status.

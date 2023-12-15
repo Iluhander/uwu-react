@@ -13,6 +13,9 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
  * (before next data fetching the request).
  */
 export default function useReq<TData>(fetchFunction: TFetchFunction, config?: IReqConfig<TData>): {
+    /**
+     * Initially equal to config.initialData.
+     */
     data: (TData & {}) | null;
     /**
      * Request status.

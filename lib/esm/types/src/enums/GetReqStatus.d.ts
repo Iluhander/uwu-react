@@ -8,6 +8,7 @@ declare const _default: {
     LOADING: number;
     LOADED: number;
     ERROR: number;
+    TIMEOUT: number;
 };
 export default _default;
 //# sourceMappingURL=GetReqStatus.d.ts.map

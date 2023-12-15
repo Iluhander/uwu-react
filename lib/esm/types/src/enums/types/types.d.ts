@@ -3,5 +3,6 @@ export interface IStatusObj {
     LOADING: number;
     LOADED: number;
     ERROR: number;
+    TIMEOUT: number;
 }
 //# sourceMappingURL=types.d.ts.map
