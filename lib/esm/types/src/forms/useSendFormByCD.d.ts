@@ -7,5 +7,8 @@ import { ISendFormByCDConfig } from './types/types.js';
  * @param formRef - reference to form.
  * @param config - config.
  */
-export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRef: RefObject<HTMLFormElement>, config?: ISendFormByCDConfig<T>): number;
+export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRef: RefObject<HTMLFormElement>, config?: ISendFormByCDConfig<T>): {
+    status: number;
+    forceSend: (data: T) => void;
+};
 //# sourceMappingURL=useSendFormByCD.d.ts.map

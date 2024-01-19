@@ -57,5 +57,8 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
     coolDown
   );
 
-  return status;
+  return {
+    status,
+    forceSend: exec
+  };
 }
