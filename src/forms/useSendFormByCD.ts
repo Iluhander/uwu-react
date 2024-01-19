@@ -1,9 +1,9 @@
+import { RefObject, useEffect } from 'react';
 import useUpdateByCoolDown from '../hooks/useUpdateByCoolDown.js';
 import areEqualShallow from '../objs/areEqualShallow.js';
 import useReq from '../hooks/useReq/useReq.js';
 import extractFormData from './extractFormData.js';
 import { TFetchFunction } from '../hooks/types/types.js';
-import { RefObject, useEffect } from 'react';
 import { ISendFormByCDConfig } from './types/types.js';
 import injectFormData from './injectFormData.js';
 
@@ -20,12 +20,12 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
   const coolDown = config.coolDown || 5000;
   const name = config.name;
 
-  // Retrieving data from local storage.
   useEffect(() => {
     if (!name || !formRef.current) {
       return;
     }
 
+    // Retrieving data from local storage.
     const recovered = localStorage.getItem(name);
     if (recovered && formRef.current) {
       injectFormData(formRef.current, JSON.parse(recovered));
@@ -37,14 +37,14 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
         localStorage.setItem(name, JSON.stringify(extractFormData<T>(formRef.current) || {}));
       }
     }, config.localSavingCoolDown || 2000);
-  }, []);
+  }, [formRef?.current, name]);
 
   const { status, exec, setReqData } = useReq<T>((data: T) => fetchFunction(data), {
     notInstantReq: true,
     initialData: extractFormData<T>(formRef?.current)
   });
   
-  useUpdateByCoolDown(
+  const { stopUpdating, restartUpdating } = useUpdateByCoolDown(
     setReqData,
     (prevData: T) => {
       const newData = extractFormData<T>(formRef.current);
@@ -59,6 +59,8 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
 
   return {
     status,
-    forceSend: exec
+    stopUpdating, 
+    restartUpdating,
+    forceUpdate: () => exec(beforeSending(extractFormData<T>(formRef.current)))
   };
 }
