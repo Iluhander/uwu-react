@@ -1,7 +1,7 @@
 import { IStatusObj } from '../../enums/types/types.js';
 
-export interface IResponse {
-  data: any;
+export interface IResponse<TResData> {
+  data: TResData;
 }
 
 /**
@@ -9,11 +9,11 @@ export interface IResponse {
  * 
  * Reject response schema: { response: { status: number } }
  */
-export type TFetchFunction = (data: any) => Promise<IResponse>;
+export type TFetchFunction<TReqData, TResData> = (data?: TReqData) => Promise<IResponse<TResData>>;
 
-export interface IReqConfig<T> {
-  reducer?: (prevData: T | null, newData: T) => NonNullable<T> | null;
-  getSuccessStatus?: (data: T) => number;
+export interface IReqConfig<TResData> {
+  reducer?: (prevData: TResData | null, newData: TResData) => NonNullable<TResData> | null;
+  getSuccessStatus?: (data: TResData) => number;
   getFailedStatus?: (errCode: number) => number;
 
   /**
@@ -21,7 +21,7 @@ export interface IReqConfig<T> {
    */
   StatusObj?: IStatusObj;
 
-  initialData?: T | null;
+  initialData?: TResData | null;
 
   /**
    * Will the request be made right after hook initialization.
@@ -43,7 +43,7 @@ export interface IReqConfig<T> {
 
 export type TSyncGuardResult = number | undefined;
 
-export interface IGetReqConfig<T> extends IReqConfig<T> {
+export interface IGetReqConfig<TResData> extends IReqConfig<TResData> {
   syncGuard?: () => TSyncGuardResult;
 };
 

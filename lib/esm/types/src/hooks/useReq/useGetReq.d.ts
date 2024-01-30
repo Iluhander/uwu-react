@@ -9,11 +9,11 @@ import { IGetReqConfig, TFetchFunction, TSyncGuardResult } from '../types/types.
  * If "syncGuard" returns not nullable value, then the request is cancelled with
  * @see {@link checkGuardErr} error.
  */
-export default function useGetReq<T>(fetchFunction: TFetchFunction, config?: IGetReqConfig<T>): {
+export default function useGetReq<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IGetReqConfig<TResData>): {
     status: TSyncGuardResult;
-    data: (T & {}) | null;
-    setData: import("react").Dispatch<import("react").SetStateAction<(T & {}) | null>>;
-    setReqData: (input: import("react").SetStateAction<T>) => void;
-    exec: (data: T) => void;
+    data: TResData | null;
+    setData: (input: import("react").SetStateAction<TReqData>) => void;
+    setReqData: (newReqData: import("react").SetStateAction<TReqData>) => void;
+    exec: (newReqData: TReqData) => void;
 };
 //# sourceMappingURL=useGetReq.d.ts.map

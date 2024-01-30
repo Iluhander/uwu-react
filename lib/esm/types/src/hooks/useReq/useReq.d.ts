@@ -12,28 +12,28 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
  * - If the config has field initialData, then resData = initialData
  * (before next data fetching the request).
  */
-export default function useReq<TData>(fetchFunction: TFetchFunction, config?: IReqConfig<TData>): {
-    /**
-     * Initially equal to config.initialData.
-     */
-    data: (TData & {}) | null;
+export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IReqConfig<TResData>): {
     /**
      * Request status.
      */
     status: number;
     /**
+     * Initially equal to config.initialData.
+     */
+    data: TResData | null;
+    /**
      * Function for changing the data stored.
      */
-    setData: import("react").Dispatch<SetStateAction<(TData & {}) | null>>;
+    setData: (input: SetStateAction<TReqData>) => void;
     /**
      * Function for changing the request body without executing it.
      */
-    setReqData: (input: SetStateAction<TData>) => void;
+    setReqData: (newReqData: SetStateAction<TReqData>) => void;
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
-     * @param {*} data - request body.
+     * @param {TReqData} data - request body.
      */
-    exec: (data: TData) => void;
+    exec: (newReqData: TReqData) => void;
 };
 //# sourceMappingURL=useReq.d.ts.map

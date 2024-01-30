@@ -13,7 +13,11 @@ import injectFormData from './injectFormData.js';
  * @param formRef - reference to form.
  * @param config - config.
  */
-export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRef: RefObject<HTMLFormElement>, config: ISendFormByCDConfig<T> = {}) {
+export default function useSendFormByCD<TReqData, TResData>(
+  fetchFunction: TFetchFunction<TReqData, TResData>,
+  formRef: RefObject<HTMLFormElement>,
+  config: ISendFormByCDConfig<TReqData> = {}
+) {
   const beforeSending = config.beforeSending || ((newData: any) => newData);
   const compare =
     config.compare || ((prevData, newData) => newData && !areEqualShallow(prevData, newData));
@@ -34,20 +38,20 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
     // Saving data to local storage.
     setInterval(() => {
       if (formRef.current) {
-        localStorage.setItem(name, JSON.stringify(extractFormData<T>(formRef.current) || {}));
+        localStorage.setItem(name, JSON.stringify(extractFormData<TReqData>(formRef.current) || {}));
       }
     }, config.localSavingCoolDown || 2000);
   }, [formRef?.current, name]);
 
-  const { status, exec, setReqData } = useReq<T>((data: T) => fetchFunction(data), {
+  const { status, exec, setReqData } = useReq<TReqData, TResData>((data?: TReqData) => fetchFunction(data), {
     notInstantReq: true,
-    initialData: extractFormData<T>(formRef?.current)
+    initialData: extractFormData<TResData>(formRef?.current)
   });
   
   const { stopUpdating, restartUpdating } = useUpdateByCoolDown(
     setReqData,
-    (prevData: T) => {
-      const newData = extractFormData<T>(formRef.current);
+    (prevData: TReqData) => {
+      const newData = extractFormData<TReqData>(formRef.current);
 
       if (compare(prevData, newData)) {
         return beforeSending(newData);
@@ -61,6 +65,6 @@ export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRe
     status,
     stopUpdating, 
     restartUpdating,
-    forceUpdate: () => exec(beforeSending(extractFormData<T>(formRef.current)))
+    forceUpdate: () => exec(beforeSending(extractFormData<TReqData>(formRef.current)))
   };
 }

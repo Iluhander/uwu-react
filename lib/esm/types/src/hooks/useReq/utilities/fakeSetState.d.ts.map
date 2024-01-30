@@ -1,0 +1,1 @@
+{"version":3,"file":"fakeSetState.d.ts","sourceRoot":"","sources":["../../../../../../../src/hooks/useReq/utilities/fakeSetState.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,cAAc,EAAE,MAAM,OAAO,CAAC;AAEzD,MAAM,CAAC,OAAO,UAAU,YAAY,CAClC,KAAK,EAAE,cAAc,CAAC,GAAG,CAAC,EAC1B,GAAG,EAAE,gBAAgB,CAAC,GAAG,CAAC,EAC1B,GAAG,EAAE,MAAM,QAOZ"}

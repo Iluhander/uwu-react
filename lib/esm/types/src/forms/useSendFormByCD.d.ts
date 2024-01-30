@@ -7,7 +7,7 @@ import { ISendFormByCDConfig } from './types/types.js';
  * @param formRef - reference to form.
  * @param config - config.
  */
-export default function useSendFormByCD<T>(fetchFunction: TFetchFunction, formRef: RefObject<HTMLFormElement>, config?: ISendFormByCDConfig<T>): {
+export default function useSendFormByCD<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, formRef: RefObject<HTMLFormElement>, config?: ISendFormByCDConfig<TReqData>): {
     status: number;
     stopUpdating: () => void;
     restartUpdating: () => void;
