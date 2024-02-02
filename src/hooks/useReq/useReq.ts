@@ -63,10 +63,10 @@ function makeReq<TReqData, TResData>(
       } else {
         internalData.attemptsLeft = 0;
 
-        if (err.status === StatusObj.TIMEOUT) {
+        if (err?.status === StatusObj.TIMEOUT) {
           setStatus(StatusObj.TIMEOUT);
         } else {
-          setStatus(getFailedStatus ? getFailedStatus(err.response?.status || 500) : StatusObj.ERROR);
+          setStatus(getFailedStatus ? getFailedStatus(err?.response?.status || 500) : StatusObj.ERROR);
         }
       }
     });
