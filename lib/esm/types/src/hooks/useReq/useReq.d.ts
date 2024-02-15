@@ -24,7 +24,7 @@ export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction
     /**
      * Function for changing the data stored.
      */
-    setData: (input: SetStateAction<TReqData>) => void;
+    setData: (input: SetStateAction<TResData>) => void;
     /**
      * Function for changing the request body without executing it.
      */

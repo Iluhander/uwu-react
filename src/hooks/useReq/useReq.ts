@@ -127,7 +127,7 @@ export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction
     /**
      * Function for changing the data stored.
      */
-    setData: (input: SetStateAction<TReqData>) => {
+    setData: (input: SetStateAction<TResData>) => {
       // Not using state for resData is intended.
       fakeSetState(input, internalData, 'resData');
   

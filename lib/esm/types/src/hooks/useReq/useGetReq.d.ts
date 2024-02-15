@@ -12,7 +12,7 @@ import { IGetReqConfig, TFetchFunction, TSyncGuardResult } from '../types/types.
 export default function useGetReq<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IGetReqConfig<TResData>): {
     status: TSyncGuardResult;
     data: TResData | null;
-    setData: (input: import("react").SetStateAction<TReqData>) => void;
+    setData: (input: import("react").SetStateAction<TResData>) => void;
     setReqData: (newReqData: import("react").SetStateAction<TReqData>) => void;
     exec: (newReqData: TReqData) => void;
 };
