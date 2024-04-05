@@ -14,6 +14,6 @@ export default function useGetReq<TReqData, TResData>(fetchFunction: TFetchFunct
     data: TResData | null;
     setData: (input: import("react").SetStateAction<TResData>) => void;
     setReqData: (newReqData: import("react").SetStateAction<TReqData>) => void;
-    exec: (newReqData: TReqData) => void;
+    exec: (newReqData?: TReqData | undefined) => void;
 };
 //# sourceMappingURL=useGetReq.d.ts.map

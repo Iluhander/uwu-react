@@ -32,8 +32,8 @@ export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
-     * @param {TReqData} data - request body.
+     * @param {TReqData=} data - request body.
      */
-    exec: (newReqData: TReqData) => void;
+    exec: (newReqData?: TReqData) => void;
 };
 //# sourceMappingURL=useReq.d.ts.map

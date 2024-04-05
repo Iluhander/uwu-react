@@ -142,9 +142,9 @@ export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
-     * @param {TReqData} data - request body.
+     * @param {TReqData=} data - request body.
      */
-    exec: (newReqData: TReqData) => {
+    exec: (newReqData?: TReqData) => {
       internalData.current.reqData = newReqData;
       execReq();
     }
