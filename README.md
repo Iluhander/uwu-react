@@ -16,6 +16,8 @@ useReq allows you to control your requests. You can provide a fetchFunction and 
 - _getFailedStatus_: function, receiving status code of a failed fetchFunction and returning a new status
 - _notInstantReq_: flag, telling should the fetchFunction be called only after calling exec
 - _initialData_: initial data, stored in hook
+- _initialStatus_: initial status. If set to StatusObj.INITIALIZED, request isn't being
+executed untill the exec() call.
 - _reducer_: function, receiving old data and new fetchFunction data, and returning the new data
 - _timeout_: timeout in ms for fetchFunction. After the time runs out, status sets to StatusObj.TIMEOUT
 - _attempts_: amount of times useReq should try to call fetchFunction, ignoring it's error

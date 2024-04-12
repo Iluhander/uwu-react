@@ -1,5 +1,6 @@
 import { SetStateAction } from 'react';
 import { IReqConfig, TFetchFunction } from '../types/types.js';
+import { IStatusObj } from '../../enums/types/types.js';
 /**
  * Hook for making a request.
  * Also can change the stored data between requests
@@ -9,10 +10,13 @@ import { IReqConfig, TFetchFunction } from '../types/types.js';
  *
  * - If the config has field "StatusObj", then "StatusObj" is used instead of ReqStatus
  * for request state enum.
- * - If the config has field initialData, then resData = initialData
+ * - If the config has field "initialData", then resData = "initialData"
  * (before next data fetching the request).
+ * - If the config has field "initialStatus", then initially status = initialStatus.
+ * status = "StatusObj".LOADING by default. If the status value initially differs from
+ * "StatusObj".LOADING, then the request doesn't start automatically.
  */
-export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IReqConfig<TResData>): {
+export default function useReq<TReqData, TResData, IStatus extends IStatusObj = IStatusObj>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IReqConfig<TResData, IStatus>): {
     /**
      * Request status.
      */

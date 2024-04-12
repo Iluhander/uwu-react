@@ -6,6 +6,7 @@ import extractFormData from './extractFormData.js';
 import { TFetchFunction } from '../hooks/types/types.js';
 import { ISendFormByCDConfig } from './types/types.js';
 import injectFormData from './injectFormData.js';
+import { ReqStatus } from '../enums/index.js';
 
 /**
  * Makes requests with form data by cool down.
@@ -44,7 +45,7 @@ export default function useSendFormByCD<TReqData, TResData>(
   }, [formRef?.current, name]);
 
   const { status, exec, setReqData } = useReq<TReqData, TResData>((data?: TReqData) => fetchFunction(data), {
-    notInstantReq: true,
+    initialStatus: ReqStatus.INITIALIZED,
     initialData: extractFormData<TResData>(formRef?.current)
   });
   

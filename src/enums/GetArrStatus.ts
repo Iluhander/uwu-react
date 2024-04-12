@@ -1,9 +1,9 @@
-import GetReqStatus from "./GetReqStatus.js";
+import ReqStatus from "./ReqStatus.js";
 
 /**
  * Enum of GET-Array-request state.
  */
 export default {
-  ...GetReqStatus,
+  ...ReqStatus,
   NO_CONTENT: 204
 };

@@ -6,6 +6,7 @@ import { IReqConfig, IResponse, TFetchFunction } from '../types/types.js';
 import { IStatusObj } from '../../enums/types/types.js';
 import useRerender from './utilities/useRerender.js';
 import fakeSetState from './utilities/fakeSetState.js';
+import race from './utilities/race.js';
 
 interface IInternalData<TReqData, TResData>{
   reqData?: TReqData,
@@ -14,9 +15,9 @@ interface IInternalData<TReqData, TResData>{
   resData: TResData | null
 };
 
-function makeReq<TReqData, TResData>(
+function makeReq<TReqData, TResData, IStatus extends IStatusObj>(
   fetchFunction: TFetchFunction<TReqData, TResData>,
-  config: IReqConfig<TResData> = {},
+  config: IReqConfig<TResData, IStatus> = {},
   StatusObj: IStatusObj,
   internalData: IInternalData<TReqData, TResData>,
   setStatus: React.Dispatch<SetStateAction<number>>,
@@ -33,22 +34,22 @@ function makeReq<TReqData, TResData>(
 
   const { getSuccessStatus, getFailedStatus } = config;
   
-  return Promise.race([
+  return race([
     fetchFunction(internalData.reqData),
     new Promise<IResponse<TResData>>((_, reject) =>
       setTimeout(() => reject({ status: StatusObj.TIMEOUT }),
       config.timeout || 30000)
     )
   ])
-    .then(({ data }) => {
+    .then((res) => {
       // In case the hook is called super frequently.
       if (callTime < internalData.lastCallTime) {
         return;
       }
 
-      internalData.resData = config.reducer ? config.reducer(internalData.resData, data) : data;
+      internalData.resData = config.reducer ? config.reducer(internalData.resData, res.data) : res.data;
 
-      setStatus(getSuccessStatus ? getSuccessStatus(data) : StatusObj.LOADED);
+      setStatus(getSuccessStatus ? getSuccessStatus(res.data, res) : StatusObj.LOADED);
     })
     .catch((err) => {
       // In case the hook is called super frequently. 
@@ -66,7 +67,9 @@ function makeReq<TReqData, TResData>(
         if (err?.status === StatusObj.TIMEOUT) {
           setStatus(StatusObj.TIMEOUT);
         } else {
-          setStatus(getFailedStatus ? getFailedStatus(err?.response?.status || 500) : StatusObj.ERROR);
+          setStatus(getFailedStatus ?
+            getFailedStatus(err?.response?.status || 500, err?.response) : StatusObj.ERROR
+          );
         }
       }
     });
@@ -81,14 +84,17 @@ function makeReq<TReqData, TResData>(
  *
  * - If the config has field "StatusObj", then "StatusObj" is used instead of ReqStatus
  * for request state enum.
- * - If the config has field initialData, then resData = initialData
+ * - If the config has field "initialData", then resData = "initialData"
  * (before next data fetching the request).
+ * - If the config has field "initialStatus", then initially status = initialStatus.
+ * status = "StatusObj".LOADING by default. If the status value initially differs from
+ * "StatusObj".LOADING, then the request doesn't start automatically.
  */
-export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction<TReqData, TResData>, config: IReqConfig<TResData> = {}) {
+export default function useReq<TReqData, TResData, IStatus extends IStatusObj = IStatusObj>(fetchFunction: TFetchFunction<TReqData, TResData>, config: IReqConfig<TResData, IStatus> = {}) {
   const rerender = useRerender();
 
   const StatusObj = config.StatusObj || ReqStatus;
-  const [status, setStatus] = useState(config.notInstantReq ? StatusObj.INITIALIZED : StatusObj.LOADING);
+  const [status, setStatus] = useState(config.initialStatus || StatusObj.LOADING);
   
   /**
    * Req and response data.
@@ -105,15 +111,19 @@ export default function useReq<TReqData, TResData>(fetchFunction: TFetchFunction
     internalData.current.lastCallTime = Date.now();
     internalData.current.attemptsLeft = config.attempts || 1;
 
-    makeReq<TReqData, TResData>(fetchFunction, config, StatusObj, internalData.current, setStatus, internalData.current.lastCallTime);
+    makeReq<TReqData, TResData, IStatus>(fetchFunction, config, StatusObj, internalData.current, setStatus, internalData.current.lastCallTime);
     setStatus(StatusObj.LOADING);
   };
 
   useEffect(() => {
-    if (!config.notInstantReq && !internalData.current.lastCallTime) {
+    if (
+      !config.notInstantReq &&
+      (!config.initialStatus || config.initialStatus === StatusObj.LOADING) &&
+      !internalData.current.lastCallTime
+    ) {
       execReq();
     }
-  }, [config.notInstantReq]);
+  }, [config.initialStatus]);
 
   return {
     /**

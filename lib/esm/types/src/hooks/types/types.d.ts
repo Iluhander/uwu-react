@@ -8,19 +8,20 @@ export interface IResponse<TResData> {
  * Reject response schema: { response: { status: number } }
  */
 export type TFetchFunction<TReqData, TResData> = (data?: TReqData) => Promise<IResponse<TResData>>;
-export interface IReqConfig<TResData> {
+export interface IReqConfig<TResData, IStatus extends IStatusObj> {
     reducer?: (prevData: TResData | null, newData: TResData) => NonNullable<TResData> | null;
-    getSuccessStatus?: (data: TResData) => number;
-    getFailedStatus?: (errCode: number) => number;
+    getSuccessStatus?: (data?: TResData, res?: IResponse<TResData>) => number;
+    getFailedStatus?: (errCode?: number, res?: IResponse<any>) => number;
     /**
      * Custom StatusObj, used instead of ReqStatus.
      */
-    StatusObj?: IStatusObj;
-    initialData?: TResData | null;
+    StatusObj?: IStatus;
     /**
      * Will the request be made right after hook initialization.
-     */
+    */
+    initialStatus?: number;
     notInstantReq?: boolean;
+    initialData?: TResData | null;
     /**
      * Request timeout in ms. If time run out, sets status to IStatusObj.TIMEOUT. Defaults to 30s.
      */
@@ -33,9 +34,5 @@ export interface IReqConfig<TResData> {
     ResSchema?: {
         new (): any;
     };
-}
-export type TSyncGuardResult = number | undefined;
-export interface IGetReqConfig<TResData> extends IReqConfig<TResData> {
-    syncGuard?: () => TSyncGuardResult;
 }
 //# sourceMappingURL=types.d.ts.map
