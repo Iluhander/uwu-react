@@ -82,13 +82,15 @@ function makeReq<TReqData, TResData, IStatus extends IStatusObj>(
  * @param {TFetchFunction} fetchFunction - function making the request.
  * @param {IReqConfig} config - request configuration.
  *
- * - If the config has field "StatusObj", then "StatusObj" is used instead of ReqStatus
+ * If the config has field:
+ * - "StatusObj", then "StatusObj" is used instead of ReqStatus
  * for request state enum.
- * - If the config has field "initialData", then resData = "initialData"
+ * - "initialData", then resData = "initialData"
  * (before next data fetching the request).
- * - If the config has field "initialStatus", then initially status = initialStatus.
- * status = "StatusObj".LOADING by default. If the status value initially differs from
- * "StatusObj".LOADING, then the request doesn't start automatically.
+ * - "initialStatus", then initially status = initialStatus.
+ * status = "StatusObj".LOADING by default.
+ * - "notInstantReq" and it is set to true or "initialStatus" is set to
+ * "StatusObj".INITIALIZED, then a request doesn't start without the "exec" call.
  */
 export default function useReq<TReqData, TResData, IStatus extends IStatusObj = IStatusObj>(fetchFunction: TFetchFunction<TReqData, TResData>, config: IReqConfig<TResData, IStatus> = {}) {
   const rerender = useRerender();
