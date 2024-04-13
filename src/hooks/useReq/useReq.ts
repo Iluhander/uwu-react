@@ -94,7 +94,9 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
   const rerender = useRerender();
 
   const StatusObj = config.StatusObj || ReqStatus;
-  const [status, setStatus] = useState(config.initialStatus || StatusObj.LOADING);
+  const [status, setStatus] = useState(
+    config.initialStatus || (config.notInstantReq ? StatusObj.INITIALIZED : StatusObj.LOADING)
+  );
   
   /**
    * Req and response data.
@@ -117,9 +119,9 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
 
   useEffect(() => {
     if (
+      !internalData.current.lastCallTime &&
       !config.notInstantReq &&
-      (!config.initialStatus || config.initialStatus === StatusObj.LOADING) &&
-      !internalData.current.lastCallTime
+      (!config.initialStatus || config.initialStatus === StatusObj.LOADING)
     ) {
       execReq();
     }
