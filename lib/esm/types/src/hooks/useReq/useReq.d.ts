@@ -1,4 +1,4 @@
-import { SetStateAction } from 'react';
+import { SetStateAction, Dispatch } from 'react';
 import { IReqConfig, TFetchFunction } from '../types/types.js';
 import { IStatusObj } from '../../enums/types/types.js';
 /**
@@ -8,13 +8,15 @@ import { IStatusObj } from '../../enums/types/types.js';
  * @param {TFetchFunction} fetchFunction - function making the request.
  * @param {IReqConfig} config - request configuration.
  *
- * - If the config has field "StatusObj", then "StatusObj" is used instead of ReqStatus
+ * If the config has field:
+ * - "StatusObj", then "StatusObj" is used instead of ReqStatus
  * for request state enum.
- * - If the config has field "initialData", then resData = "initialData"
+ * - "initialData", then resData = "initialData"
  * (before next data fetching the request).
- * - If the config has field "initialStatus", then initially status = initialStatus.
- * status = "StatusObj".LOADING by default. If the status value initially differs from
- * "StatusObj".LOADING, then the request doesn't start automatically.
+ * - "initialStatus", then initially status = initialStatus.
+ * status = "StatusObj".LOADING by default.
+ * - "notInstantReq" and it is set to true or "initialStatus" is set to
+ * "StatusObj".INITIALIZED, then a request doesn't start without the "exec" call.
  */
 export default function useReq<TReqData, TResData, IStatus extends IStatusObj = IStatusObj>(fetchFunction: TFetchFunction<TReqData, TResData>, config?: IReqConfig<TResData, IStatus>): {
     /**
@@ -28,16 +30,16 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
     /**
      * Function for changing the data stored.
      */
-    setData: (input: SetStateAction<TResData>) => void;
+    setData: Dispatch<SetStateAction<TResData>>;
     /**
      * Function for changing the request body without executing it.
      */
-    setReqData: (newReqData: SetStateAction<TReqData>) => void;
+    setReqData: Dispatch<SetStateAction<TReqData>>;
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
      * @param {TReqData=} data - request body.
      */
-    exec: (newReqData?: TReqData) => void;
+    exec: (newReqData?: TReqData | undefined) => void;
 };
 //# sourceMappingURL=useReq.d.ts.map

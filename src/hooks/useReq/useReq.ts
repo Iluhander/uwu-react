@@ -1,4 +1,4 @@
-import { useEffect, useRef, SetStateAction, useState } from 'react';
+import { useEffect, useRef, SetStateAction, useState, Dispatch } from 'react';
 
 import { ReqStatus } from '../../enums/index.js';
 
@@ -12,7 +12,10 @@ interface IInternalData<TReqData, TResData>{
   reqData?: TReqData,
   lastCallTime: number,
   attemptsLeft: number,
-  resData: TResData | null
+  resData: TResData | null,
+  setData: Dispatch<SetStateAction<TResData>>;
+  setReqData: Dispatch<SetStateAction<TReqData>>;
+  exec: (newReqData?: TReqData) => void;
 };
 
 function makeReq<TReqData, TResData, IStatus extends IStatusObj>(
@@ -108,7 +111,19 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
       reqData: undefined,
       lastCallTime: 0,
       attemptsLeft: 0,
-      resData: config.initialData !== undefined ? config.initialData : null
+      resData: config.initialData !== undefined ? config.initialData : null,
+      setData: (input: SetStateAction<TResData>) => {
+        fakeSetState(input, internalData, 'resData');
+    
+        rerender();
+      },
+      setReqData: (newReqData: SetStateAction<TReqData>) => {
+        fakeSetState(newReqData, internalData, 'reqData');
+      },
+      exec: (newReqData?: TReqData) => {
+        internalData.current.reqData = newReqData;
+        execReq();
+      }
     });
 
   const execReq = () => {
@@ -141,26 +156,16 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
     /**
      * Function for changing the data stored.
      */
-    setData: (input: SetStateAction<TResData>) => {
-      // Not using state for resData is intended.
-      fakeSetState(input, internalData, 'resData');
-  
-      rerender();
-    },
+    setData: internalData.current.setData,
     /**
      * Function for changing the request body without executing it.
      */
-    setReqData: (newReqData: SetStateAction<TReqData>) => {
-      fakeSetState(newReqData, internalData, 'reqData');
-    },
+    setReqData: internalData.current.setReqData,
     /**
      * Function for making the request.
      * Can be used for calling the request several times.
      * @param {TReqData=} data - request body.
      */
-    exec: (newReqData?: TReqData) => {
-      internalData.current.reqData = newReqData;
-      execReq();
-    }
+    exec: internalData.current.exec,
   };
 }
