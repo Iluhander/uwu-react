@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { ReqStatus, useReq } from '../lib/esm/index.mjs';
 import { useEffect } from 'react';
 
@@ -124,3 +124,44 @@ test('fails due to a timeout after retries', async () => {
     expect(result.current?.status).toBe(ReqStatus.TIMEOUT);
   }
 });
+
+const mockFetchFunction = () => Promise.resolve({ data: 'success' });
+
+test('useReq with setData', async () => {
+  const { result } = renderHook(() => useReq(mockFetchFunction));
+
+  act(() => {
+    result.current.setData('newData');
+  });
+
+  expect(result.current.data).toBe('newData');
+});
+
+const reducerFn = (oldData, newData) => `${oldData} + ${newData}`;
+
+test('useReq with reducer', async () => {
+  const { result } = renderHook(() =>
+    useReq(mockFetchFunction, { reducer: reducerFn, initialData: 'initial' })
+  );
+
+  await res(300);
+  expect(result.current.data).toBe('initial + success');
+});
+
+const customStatus = {
+  INITIAL: 'INITIAL',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+  TIMEOUT: 'TIMEOUT',
+};
+
+test('useReq with initialData and initialStatus', async () => {
+  const { result } = renderHook(() =>
+    useReq(mockFetchFunction, { initialData: 'initial', initialStatus: customStatus.INITIAL })
+  );
+
+  expect(result.current.data).toBe('initial');
+  expect(result.current.status).toBe(customStatus.INITIAL);
+});
+
