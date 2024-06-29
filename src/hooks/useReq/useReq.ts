@@ -50,9 +50,15 @@ function makeReq<TReqData, TResData, IStatus extends IStatusObj>(
         return;
       }
 
-      internalData.resData = config.reducer ? config.reducer(internalData.resData, res.data) : res.data;
+      setStatus((curStatus) => {
+        if (curStatus === StatusObj.LOADING) {
+          internalData.resData = config.reducer ? config.reducer(internalData.resData, res.data) : res.data;
 
-      setStatus(getSuccessStatus ? getSuccessStatus(res.data, res) : StatusObj.LOADED);
+          return getSuccessStatus ? getSuccessStatus(res.data, res) : StatusObj.LOADED; 
+        }
+
+        return curStatus;
+      });
     })
     .catch((err) => {
       // In case the hook is called super frequently. 
@@ -149,6 +155,11 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
      * Request status.
      */
     status,
+    /**
+     * Function for changing the request status !directly!.
+     * If the current status value is StatusObj.LOADING, cancels the execution. 
+     */
+    setStatus,
     /**
      * Initially equal to config.initialData.
      */

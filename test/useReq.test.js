@@ -165,3 +165,20 @@ test('useReq with initialData and initialStatus', async () => {
   expect(result.current.status).toBe(customStatus.INITIAL);
 });
 
+test('useReq with setStatus', async () => {
+  const { result } = renderHook(() =>
+    useReq(() => res(250))
+  );
+
+  expect(result.current.status).toBe(ReqStatus.LOADING);
+
+  act(() => {
+    result.current.setStatus(ReqStatus.ERROR);
+  });
+
+  expect(result.current.status).toBe(ReqStatus.ERROR);
+
+  await res(300);
+
+  expect(result.current.status).toBe(ReqStatus.ERROR);
+});
