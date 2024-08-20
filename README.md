@@ -21,6 +21,7 @@ executed untill the exec() call.
 - _reducer_: function, receiving old data and new fetchFunction data, and returning the new data
 - _timeout_: timeout in ms for fetchFunction. After the time runs out, status sets to StatusObj.TIMEOUT
 - _attempts_: amount of times useReq should try to call fetchFunction, ignoring it's error
+- _debounce_: the exec debounce time.
 
 useReq will return an object, containing the following fields:
 
