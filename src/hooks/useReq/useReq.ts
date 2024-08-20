@@ -127,8 +127,16 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
         fakeSetState(newReqData, internalData, 'reqData');
       },
       exec: (newReqData?: TReqData) => {
-        internalData.current.reqData = newReqData;
-        execReq();
+        internalData.current.lastCallTime = Date.now();
+
+        setTimeout(() => {
+          if (config.debounce && (Date.now() - internalData.current.lastCallTime < config.debounce)) {
+            return;
+          }
+
+          internalData.current.reqData = newReqData;
+          execReq();
+        }, config.debounce || 0);
       }
     });
 

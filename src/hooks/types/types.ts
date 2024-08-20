@@ -41,4 +41,9 @@ export interface IReqConfig<TResData, IStatus extends IStatusObj> {
    */
   attempts?: number;
   ResSchema?: { new(): any };
+
+  /**
+   * Debounce duration.
+  */
+  debounce?: number;
 };

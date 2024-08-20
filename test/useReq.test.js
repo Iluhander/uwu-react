@@ -72,6 +72,7 @@ test('responds in a normal case', async () => {
   for (let { data, time, hook } of cases.success.common) {
     const { result } = renderHook(hook);
 
+    await res(20);
     expect(result.current?.status).toBe(ReqStatus.LOADING);
 
     await res(time + 100);
@@ -96,6 +97,7 @@ test('responds in a error case', async () => {
   for (let { time, hook } of cases.error.common) {
     const { result } = renderHook(hook);
 
+    await res(20);
     expect(result.current?.status).toBe(ReqStatus.LOADING);
 
     await res(time + 100);
@@ -107,6 +109,7 @@ test('fails due to a timeout', async () => {
   for (let { time, hook } of cases.error.timeout.common) {
     const { result } = renderHook(hook);
 
+    await res(20);
     expect(result.current?.status).toBe(ReqStatus.LOADING);
 
     await res(300);

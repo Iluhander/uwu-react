@@ -24,7 +24,7 @@ export default function useReq<TReqData, TResData, IStatus extends IStatusObj = 
      */
     status: number;
     /**
-     * Function for changin the request status !directly!.
+     * Function for changing the request status !directly!.
      * If the current status value is StatusObj.LOADING, cancels the execution.
      */
     setStatus: Dispatch<SetStateAction<number>>;

@@ -34,5 +34,9 @@ export interface IReqConfig<TResData, IStatus extends IStatusObj> {
     ResSchema?: {
         new (): any;
     };
+    /**
+     * Debounce duration.
+    */
+    debounce?: number;
 }
 //# sourceMappingURL=types.d.ts.map
