@@ -50,15 +50,22 @@ function makeReq<TReqData, TResData, IStatus extends IStatusObj>(
         return;
       }
 
-      setStatus((curStatus) => {
-        if (curStatus === StatusObj.LOADING) {
-          internalData.resData = config.reducer ? config.reducer(internalData.resData, res.data) : res.data;
+      setTimeout(() => {
+        let applied = false;
+        setStatus((curStatus) => {
+          if (curStatus === StatusObj.LOADING) {
+            if (!applied) {
+              internalData.resData = config.reducer ? config.reducer(internalData.resData, res.data) : res.data;
 
-          return getSuccessStatus ? getSuccessStatus(res.data, res) : StatusObj.LOADED; 
-        }
+              applied = true;
+            }
 
-        return curStatus;
-      });
+            return getSuccessStatus ? getSuccessStatus(res.data, res) : StatusObj.LOADED; 
+          }
+
+          return curStatus;
+        });
+      }, 0);
     })
     .catch((err) => {
       // In case the hook is called super frequently. 
